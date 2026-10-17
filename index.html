@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskPlot AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #101827;
+      color: white;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px;
+      background: #182337;
+      border-bottom: 1px solid #29364b;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #65d6ad;
+    }
+
+    .plus {
+      background: #65d6ad;
+      color: #102019;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      border: none;
+    }
+
+    main {
+      max-width: 850px;
+      margin: auto;
+      padding: 24px 16px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 40px 10px;
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 span {
+      color: #65d6ad;
+    }
+
+    .hero p {
+      color: #b8c3d6;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: #1b283c;
+      border: 1px solid #31415a;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border: 1px solid #45546b;
+      border-radius: 9px;
+      background: #101827;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 9px;
+      padding: 12px 16px;
+      background: #65d6ad;
+      color: #102019;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    .secondary {
+      background: #30415b;
+      color: white;
+      margin: 4px;
+    }
+
+    #chatMessages {
+      height: 220px;
+      overflow-y: auto;
+      background: #101827;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 12px 0;
+    }
+
+    .message {
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 9px;
+      background: #263750;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .user {
+      background: #245a4b;
+    }
+
+    #result {
+      margin-top: 15px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #9caac0;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">◉ TaskPlot <span>AI</span></div>
+  <button class="plus" onclick="showPlus()">TaskPlot AI Plus ✦</button>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1>Make your tasks <span>simpler.</span></h1>
+    <p>
+      Organise your thoughts, solve problems, and prepare
+      for exams with your personal productivity assistant.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>🧠 AI Problem Solver</h2>
+    <p>Describe a problem and break it into manageable steps.</p>
+
+    <textarea id="problem"
+      placeholder="What problem do you want to solve?"
+      rows="3"></textarea>
+
+    <button onclick="solveProblem()">Organise My Problem</button>
+
+    <div id="result"></div>
+  </section>
+
+  <section class="card">
+    <h2>💬 TaskPlot AI Chat</h2>
+    <div id="chatMessages">
+      <div class="message">
+        Hi! I'm TaskPlot AI. Tell me what you need help with.
+      </div>
+    </div>
+
+    <input id="chatInput" placeholder="Ask me anything..."
+      onkeydown="if(event.key==='Enter') sendMessage()">
+
+    <button onclick="sendMessage()">Send Message</button>
+  </section>
+
+  <section class="card">
+    <h2>📚 Student Exam Preparation</h2>
+    <p>Create a simple study plan for your next examination.</p>
+
+    <input id="subject" placeholder="Subject">
+
+    <input id="chapters" type="number" min="1" max="100"
+      placeholder="Number of chapters">
+
+    <select id="hours">
+      <option value="1">1 hour available</option>
+      <option value="2">2 hours available</option>
+      <option value="3">3 hours available</option>
+      <option value="4">4 hours available</option>
+      <option value="5">5 hours available</option>
+      <option value="6">6 hours available</option>
+    </select>
+
+    <button onclick="makeStudyPlan()">Create Study Plan</button>
+
+    <div id="studyResult"></div>
+  </section>
+
+</main>
+
+<footer>
+  TaskPlot AI © 2026 · Plan better. Learn smarter.
+</footer>
+
+<script>
+  function solveProblem() {
+    const problem = document.getElementById("problem").value.trim();
+    const result = document.getElementById("result");
+
+    if (!problem) {
+      result.textContent = "Please describe your problem first.";
+      return;
+    }
+
+    result.textContent =
+      "Let's organise your problem:\n\n" +
+      "1. Define the main problem.\n" +
+      "2. Identify what is causing it.\n" +
+      "3. List three possible solutions.\n" +
+      "4. Choose the most practical solution.\n" +
+      "5. Take one small action now.\n\n" +
+      "Your problem: " + problem +
+      "\n\nThis is a basic guide, not an AI-generated analysis yet.";
+  }
+
+  function sendMessage() {
+    const input = document.getElementById("chatInput");
+    const chat = document.getElementById("chatMessages");
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    const userMessage = document.createElement("div");
+    userMessage.className = "message user";
+    userMessage.textContent = "You: " + message;
+    chat.appendChild(userMessage);
+
+    const reply = document.createElement("div");
+    reply.className = "message";
+    reply.textContent =
+      "I'm currently running in demo mode. Connect an AI API " +
+      "to enable intelligent conversations. You asked: " + message;
+    chat.appendChild(reply);
+
+    input.value = "";
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function makeStudyPlan() {
+    const subject = document.getElementById("subject").value.trim();
+    const chapters = Number(document.getElementById("chapters").value);
+    const hours = Number(document.getElementById("hours").value);
+    const output = document.getElementById("studyResult");
+
+    if (!subject || !Number.isInteger(chapters) ||
+        chapters < 1 || chapters > 100) {
+      output.textContent =
+        "Enter a subject and a number of chapters from 1 to 100.";
+      return;
+    }
+
+    const minutes = Math.floor(hours * 60 / chapters);
+
+    output.textContent =
+      "Your " + subject + " study plan\n\n" +
+      "Total study time: " + hours + " hours\n" +
+      "Chapters: " + chapters + "\n" +
+      "Time per chapter: " + minutes + " minutes\n\n" +
+      "For each chapter:\n" +
+      "1. Read and understand the main concepts.\n" +
+      "2. Review important definitions.\n" +
+      "3. Practise important questions.\n" +
+      "4. Recall the main points without looking.\n\n" +
+      "Tip: Spend extra time on difficult chapters.";
+  }
+
+  function showPlus() {
+    alert(
+      "TaskPlot AI Plus\n\n" +
+      "Premium features are planned for a future version."
+    );
+  }
+</script>
+
+</body>
+</html>
